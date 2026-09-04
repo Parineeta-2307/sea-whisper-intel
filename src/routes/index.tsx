@@ -1,24 +1,46 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+import { CinematicOpening } from "@/components/CinematicOpening";
+import { SarScene } from "@/components/SarScene";
+import { VesselReveal } from "@/components/VesselReveal";
+import { HindcastScene } from "@/components/HindcastScene";
+import { AttributionScene } from "@/components/AttributionScene";
+import { EvidenceScene } from "@/components/EvidenceScene";
+import { ImageryUpload } from "@/components/ImageryUpload";
+import { ProgressRail } from "@/components/ProgressRail";
+import { ImageryProvider } from "@/lib/imagery";
+
+const TITLE = "Maritime Intelligence — SAR Oil-Spill Attribution";
+const DESCRIPTION =
+  "A cinematic walkthrough of AI-assisted maritime oil-spill detection and vessel attribution using Sentinel-1 SAR, drift hindcasting and AIS reconstruction.";
+
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: TITLE },
+      { name: "description", content: DESCRIPTION },
+      { property: "og:title", content: TITLE },
+      { property: "og:description", content: DESCRIPTION },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <ImageryProvider>
+      <main className="relative bg-void">
+        <ProgressRail />
+        <CinematicOpening />
+        <SarScene />
+        <VesselReveal />
+        <HindcastScene />
+        <AttributionScene />
+        <EvidenceScene />
+        <ImageryUpload />
+      </main>
+    </ImageryProvider>
   );
 }
